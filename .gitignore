@@ -1,6 +1,7 @@
 venv
-djtask_v2\\__pycache__
-utils\\__pycache__
-public_app\\__pycache__
-task_app\\__pycache__
-user_app\\__pycache__
+djtask_v2\__pycache__\*
+utils\__pycache__\*
+public_app\__pycache__\*
+task_app\__pycache__\*
+user_app\__pycache__\*
+djtask_v2\__pycache__\__init__.cpython-312.pyc
