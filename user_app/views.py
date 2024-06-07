@@ -2,7 +2,7 @@ import random
 import time
 import uuid
 
-import qrcode
+# import qrcode
 from django.db import IntegrityError
 from django.db.models import ProtectedError
 from django.shortcuts import render
@@ -18,19 +18,19 @@ from utils.paginator import ExPage
 
 # Create your views here.
 
-def make_qrcode(data):
-    # 生成二维码
-    qr = qrcode.QRCode(
-        version=1,
-        error_correction=qrcode.constants.ERROR_CORRECT_L,
-        box_size=10,
-        border=4,
-    )
-    qr.add_data(data)
-    qr.make(fit=True)
+# def make_qrcode(data):
+#     # 生成二维码
+#     qr = qrcode.QRCode(
+#         version=1,
+#         error_correction=qrcode.constants.ERROR_CORRECT_L,
+#         box_size=10,
+#         border=4,
+#     )
+#     qr.add_data(data)
+#     qr.make(fit=True)
 
-    img = qr.make_image(fill='black', back_color='white')
-    img.save(f"./static/qrc/{data}.png")
+#     img = qr.make_image(fill='black', back_color='white')
+#     img.save(f"./static/qrc/{data}.png")
 
 
 @api_view(["POST"])

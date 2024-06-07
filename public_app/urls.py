@@ -14,11 +14,11 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+from django.urls import re_path
 
 from public_app.views import save_upload_file
 
 urlpatterns = [
-    url('save_upload_file/$', save_upload_file, name="save_upload_file"),
+    re_path('save_upload_file/$', save_upload_file, name="save_upload_file"),
 
 ]
