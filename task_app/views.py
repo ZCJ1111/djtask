@@ -270,6 +270,9 @@ def get_task_record_list(request: Request):
     # print(query_date)
     start_date = datetime.datetime.strptime(query_date[0], "%Y-%m-%d")
     end_date = datetime.datetime.strptime(query_date[1], "%Y-%m-%d")
+    now_date = datetime.date.today()
+    if end_date.date()>now_date:
+        return Response({"code": 0, "message": "截止日期不能大于今日"})
 
     # print(start_date)
     # print(end_date)
@@ -317,6 +320,7 @@ def get_task_record_list(request: Request):
                 record_date["completed_time"] = record.completed_time.strftime(
                     "%Y-%m-%d %H:%M:%S") if record.completed_time else ""
                 record_date["record_id"] = record.pk
+                record_date["bz"] = record.bz
             # print(record_dt.date(), j.created_at.date(), j.day, (record_dt.date() - j.created_at.date()).days % j.day)
             if (record_dt.date() - j.created_at.date()).days % j.day == 0:
                 res_data.append(record_date)
