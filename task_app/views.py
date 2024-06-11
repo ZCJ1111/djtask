@@ -39,16 +39,16 @@ def add_task(request: Request):
 
     if edit:
         # 插入编辑日志
-        content = f"{tk.creator.name} 编辑 {tk.task_title} 任务, 指派给 {tk.person.name}"
+        content = f"{tk.creator.name} Edit {tk.task_title} task, assigns to {tk.person.name}"
 
-        TasksLog(action="编辑", task_group=tk.task_group, person=request.user, content=content,
+        TasksLog(action="Edit", task_group=tk.task_group, person=request.user, content=content,
                  task_desc=tk.task_desc).save()
     else:
-        content = f"{tk.creator.name} 添加 {tk.task_title} 任务, 指派给 {tk.person.name}"
-        TasksLog(action="添加", task_group=tk.task_group, person=request.user, content=content,
+        content = f"{tk.creator.name} Add {tk.task_title} task, assigns to {tk.person.name}"
+        TasksLog(action="Add", task_group=tk.task_group, person=request.user, content=content,
                  task_desc=tk.task_desc).save()
 
-    return Response({"code": 20000, "message": "添加成功"})
+    return Response({"code": 20000, "message": "Add Successfully"})
 
 
 @api_view(["GET"])
@@ -96,10 +96,10 @@ def over_task(request: Request):
     tk: Tasks = Tasks.objects.filter(pk=pk).first()
 
     if not tk:
-        return Response({"code": 0, "message": "任务不存在"})
+        return Response({"code": 0, "message": "Task does not exist!"})
     tr = TasksRecord.objects.filter(task=tk, created_at__date=now.date(), completed_by=request.user)
     if tr:
-        return Response({"code": 0, "message": "任务已完成，请勿重复提交"})
+        return Response({"code": 0, "message": "The task has been completed. Please do not submit it again."})
     if now.time() < tk.task_time_start or now.time() > tk.task_time_end:
         return Response({"code": 0, "message": "提交任务不在时间范围内"})
     TasksRecord(task=tk, completed_by=request.user, completed_time=now).save()
