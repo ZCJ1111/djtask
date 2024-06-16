@@ -5,7 +5,7 @@
     "fields": {
       "name": "admin",
       "password": "123456",
-      "user_name": "超级管理",
+      "user_name": "Super User",
       "power": 3,
       "created_at": "1999-01-01 00:00:01",
       "updated_at": "1999-01-01 00:00:01"
@@ -14,7 +14,7 @@
     "model": "user_app.Resource",
     "pk": 1,
     "fields": {
-      "name": "任务-添加",
+      "name": "task_add",
       "action": "task_add",
       "created_at": "1999-01-01 00:00:01",
       "updated_at": "1999-01-01 00:00:01"
@@ -24,7 +24,7 @@
     "model": "user_app.Resource",
     "pk": 4,
     "fields": {
-      "name": "任务-删除",
+      "name": "task_del",
       "action": "task_del",
       "created_at": "1999-01-01 00:00:01",
       "updated_at": "1999-01-01 00:00:01"
@@ -34,7 +34,7 @@
     "model": "user_app.Resource",
     "pk": 5,
     "fields": {
-      "name": "任务-完成",
+      "name": "task_succ",
       "action": "task_succ",
       "created_at": "1999-01-01 00:00:01",
       "updated_at": "1999-01-01 00:00:01"
@@ -44,7 +44,7 @@
     "model": "user_app.Resource",
     "pk": 6,
     "fields": {
-      "name": "任务-审核",
+      "name": "task_audit",
       "action": "task_audit",
       "created_at": "1999-01-01 00:00:01",
       "updated_at": "1999-01-01 00:00:01"
@@ -54,7 +54,7 @@
     "model": "user_app.Resource",
     "pk": 7,
     "fields": {
-      "name": "任务组-添加",
+      "name": "task_group_add",
       "action": "task_group_add",
       "created_at": "1999-01-01 00:00:01",
       "updated_at": "1999-01-01 00:00:01"
@@ -64,7 +64,7 @@
     "model": "user_app.Resource",
     "pk": 8,
     "fields": {
-      "name": "任务组-删除",
+      "name": "task_group_del",
       "action": "task_group_del",
       "created_at": "1999-01-01 00:00:01",
       "updated_at": "1999-01-01 00:00:01"
@@ -74,7 +74,7 @@
     "model": "user_app.Resource",
     "pk": 9,
     "fields": {
-      "name": "任务组-编辑",
+      "name": "task_group_edit",
       "action": "task_group_edit",
       "created_at": "1999-01-01 00:00:01",
       "updated_at": "1999-01-01 00:00:01"
@@ -84,8 +84,8 @@
     "model": "user_app.Resource",
     "pk": 10,
     "fields": {
-      "name": "任务组-查看",
-      "action": "task_group_can",
+      "name": "task_group_query",
+      "action": "task_group_query",
       "created_at": "1999-01-01 00:00:01",
       "updated_at": "1999-01-01 00:00:01"
     }
@@ -94,8 +94,8 @@
     "model": "user_app.Resource",
     "pk": 11,
     "fields": {
-      "name": "任务-回溯",
-      "action": "task_back",
+      "name": "task_r1.5Check",
+      "action": "task_r1.5Check",
       "created_at": "1999-01-01 00:00:01",
       "updated_at": "1999-01-01 00:00:01"
     }

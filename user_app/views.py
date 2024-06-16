@@ -89,7 +89,7 @@ def get_user_info(request: Request):
 
     elif u.power == User.OC:
         roles = ["admin"]
-        power = "管理端"
+        power = "CheckList"
         for i in Resource.objects.all():
             resource[i.action] = True
 

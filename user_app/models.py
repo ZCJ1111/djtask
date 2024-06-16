@@ -56,17 +56,17 @@ class User(BaseModel):
     user_name = models.CharField(max_length=50, null=True, blank=True, verbose_name="姓名")
     task_group = models.ForeignKey(to=TaskGroup, on_delete=models.SET_NULL, null=True, verbose_name="所属任务组")
     role = models.ForeignKey(to=Role, on_delete=models.SET_NULL, null=True, verbose_name="角色")
-    SA = 1  # 男
-    SB = 2  # 女
+    SA = 1  # Male
+    SB = 2  # Female
     SC = 3  # 未知
 
-    SEX = ((SA, "男"), (SB, "女"), (SC, "未知"))
+    SEX = ((SA, "Male"), (SB, "Female"), (SC, "未知"))
     sex = models.IntegerField(choices=SEX, null=True, blank=True, verbose_name="性别")
     address = models.CharField(max_length=350, null=True, blank=True, verbose_name="地址")
 
-    OA = 1  # 普通用户
-    OC = 3  # 管理员
-    POWER = ((OA, "普通用户"), (OC, "管理员"))
+    OA = 1  # Staff
+    OC = 3  # Admin
+    POWER = ((OA, "Staff"), (OC, "Admin"))
     power = models.IntegerField(choices=POWER, default=OA, verbose_name="用户类别")
     phone = models.CharField(max_length=50, null=True, blank=True, verbose_name="电话")
     token = models.CharField(max_length=50, null=True, blank=True, verbose_name="用户token")

@@ -65,7 +65,7 @@ def get_task_list(request: Request):
     if name:
         kw["name__contains"] = name
     if user.power == User.OA:
-        # 普通用户
+        # Staff
         kw["task_group"] = user.task_group
     # 获取当前日期减去创建日期的天数
     date_diff : ExpressionWrapper = ExpressionWrapper(Cast(datetime.date.today() - F('created_at__date'), output_field=fields.IntegerField())/(1000*1000)/(60*60*24), output_field=fields.IntegerField())
@@ -101,59 +101,57 @@ def over_task(request: Request):
     if tr:
         return Response({"code": 0, "message": "The task has been completed. Please do not submit it again."})
     if now.time() < tk.task_time_start or now.time() > tk.task_time_end:
-        return Response({"code": 0, "message": "提交任务不在时间范围内"})
+        return Response({"code": 0, "message": "Please submit the task within the specified time"})
     TasksRecord(task=tk, completed_by=request.user, completed_time=now).save()
 
     # 插入日志
-    content = f"{request.user.name} 完成 {tk.task_title} 任务"
-    TasksLog(action="完成", task_group=tk.task_group, person=request.user, content=content,
+    content = f"{request.user.name} complete {tk.task_title} task"
+    TasksLog(action="complete", task_group=tk.task_group, person=request.user, content=content,
              task_desc=tk.task_desc).save()
 
-    return Response({"code": 20000, "message": "提交成功"})
+    return Response({"code": 20000, "message": "Submit Successfully"})
 
 
 @api_view(["POST"])
 @authentication_classes((UserAuthentication,), )
 def del_task(request: Request):
     """
-    删除任务
+    del task
     """
     pk = request.data.get("id")
     tks = Tasks.objects.filter(pk=pk).first()
     if tks:
-        # 插入日志
-        content = f"{request.user.name} 删除 {tks.task_title} 任务"
-        TasksLog(action="删除", task_group=tks.task_group, person=request.user, content=content,
+        # insert work log
+        content = f"{request.user.name} delete {tks.task_title} task"
+        TasksLog(action="delete", task_group=tks.task_group, person=request.user, content=content,
                  task_desc=tks.task_desc).save()
         tks.delete()
 
-    return Response({"code": 20000, "message": "删除成功"})
+    return Response({"code": 20000, "message": "delete successuffly"})
 
 
 @api_view(["POST"])
 @authentication_classes((UserAuthentication,), )
 def audit_task(request: Request):
-    """
-    审核/回溯任务
+    """R1.5 check
     """
     pk = request.data.get("id")
     status = request.data.get("status")
     now = datetime.datetime.now()
     tk = Tasks.objects.filter(pk=pk).first()
     if not tk:
-        return Response({"code": 0, "message": "任务不存在"})
+        return Response({"code": 0, "message": "task does not exist"})
     tr = TasksRecord.objects.filter(task=tk, completed_time__date=now.date()).first()
     if not tr:
-        return Response({"code": 0, "message": "任务未完成"})
+        return Response({"code": 0, "message": "task is not completed"})
 
     if status == 1:
-        # 审核
         tr.audit_by = request.user
         tr.audit_time = now
         tr.save()
-        # 插入日志
-        content = f"{request.user.name} 审核 {tk.task_title} 任务"
-        TasksLog(action="审核", task_group=tk.task_group, person=request.user, content=content,
+        
+        content = f"{request.user.name} review {tk.task_title} task"
+        TasksLog(action="review", task_group=tk.task_group, person=request.user, content=content,
                  task_desc=tk.task_desc).save()
     else:
         # 回溯
@@ -161,10 +159,10 @@ def audit_task(request: Request):
         tr.back_time = now
         tr.save()
         # 插入日志
-        content = f"{request.user.name} 回溯 {tk.task_title} 任务"
-        TasksLog(action="回溯", task_group=tk.task_group, person=request.user, content=content,
+        content = f"{request.user.name} r1.5 check {tk.task_title} task"
+        TasksLog(action="R1.5Check", task_group=tk.task_group, person=request.user, content=content,
                  task_desc=tk.task_desc).save()
-    return Response({"code": 20000, "message": "审核成功"})
+    return Response({"code": 20000, "message": "review successufully"})
 
 
 @api_view(["POST"])
@@ -179,26 +177,26 @@ def audit_task_bj(request: Request):
 
     tr: TasksRecord = TasksRecord.objects.filter(pk=record_id).first()
     if not tr:
-        return Response({"code": 0, "message": "任务未完成"})
+        return Response({"code": 0, "message": "task is not completed"})
     if status == 1:
-        # 审核
+        
         tr.audit_by = request.user
         tr.audit_time = now
         tr.save()
-        # 插入日志
-        content = f"{request.user.name} 补交审核 {tr.task.task_title} 任务"
-        TasksLog(action="补交审核", task_group=tr.task.task_group, person=request.user, content=content,
+        
+        content = f"{request.user.name} review {tr.task.task_title} task"
+        TasksLog(action="resubmission review", task_group=tr.task.task_group, person=request.user, content=content,
                  task_desc=tr.task.task_desc).save()
     else:
-        # 回溯
+        
         tr.back_by = request.user
         tr.back_time = now
         tr.save()
-        # 插入日志
-        content = f"{request.user.name} 补交回溯 {tr.task.task_title} 任务"
-        TasksLog(action="补交回溯", task_group=tr.task.task_group, person=request.user, content=content,
+        
+        content = f"{request.user.name} R1.5 Check {tr.task.task_title} task"
+        TasksLog(action="resubmission check", task_group=tr.task.task_group, person=request.user, content=content,
                  task_desc=tr.task.task_desc).save()
-    return Response({"code": 20000, "message": "审核成功"})
+    return Response({"code": 20000, "message": "review successfully"})
 
 
 @api_view(["POST"])
@@ -213,19 +211,19 @@ def over_task_bj(request: Request):
     now = datetime.datetime.strptime(bj_dt, "%Y-%m-%d")
     tk = Tasks.objects.filter(pk=pk).first()
     if not tk:
-        return Response({"code": 0, "message": "任务不存在"})
+        return Response({"code": 0, "message": "task does not exist"})
     tr = TasksRecord.objects.filter(task=tk, created_at__date=now.date(), completed_by=request.user)
     # print("tr: ", tr, now.date(), tk)
     if tr:
-        return Response({"code": 0, "message": "任务已完成，请勿重复提交"})
+        return Response({"code": 0, "message": " Please do not submit it again."})
     t = TasksRecord(task=tk, completed_by=request.user, completed_time=now, bz=bz)
     t.save()
     # 插入日志
-    content = f"{request.user.name} 补交完成 {tk.task_title} 任务"
-    TasksLog(action="补交完成", task_group=tk.task_group, person=request.user, content=content,
+    content = f"{request.user.name} submit {tk.task_title} task"
+    TasksLog(action="resubmit completion", task_group=tk.task_group, person=request.user, content=content,
              task_desc=tk.task_desc).save()
 
-    return Response({"code": 20000, "message": "提交成功"})
+    return Response({"code": 20000, "message": "submit successfully"})
 
 
 @api_view(["GET"])
@@ -242,7 +240,7 @@ def get_task_log_list(request: Request):
     if name:
         kw["name__contains"] = name
     if user.power == User.OA:
-        # 普通用户
+        # Staff
         kw["task_group"] = user.task_group
     u = TasksLog.objects.filter(**kw).order_by("-pk")
     pg = ExPage(data=u, limit=limit)
@@ -266,20 +264,20 @@ def get_task_record_list(request: Request):
     page = int(request.query_params.get("page", 1))
     kw = {}
     if not query_date:
-        return Response({"code": 0, "message": "日期必选"})
+        return Response({"code": 0, "message": "date must be selected"})
     # print(query_date)
     start_date = datetime.datetime.strptime(query_date[0], "%Y-%m-%d")
     end_date = datetime.datetime.strptime(query_date[1], "%Y-%m-%d")
     now_date = datetime.date.today()
     if end_date.date()>now_date:
-        return Response({"code": 0, "message": "截止日期不能大于今日"})
+        return Response({"code": 0, "message": "The deadline cannot be later than today."})
 
     # print(start_date)
     # print(end_date)
     # kw["created_at__gte"] = query_date[0]
     # kw["created_at__lte"] = query_date[1]
     if user.power == User.OA:
-        # 普通用户
+        # Staff
         kw["task_group"] = user.task_group
     u = Tasks.objects.filter(**kw).order_by("-pk")
     # pg = ExPage(data=u, limit=limit)
