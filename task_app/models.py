@@ -10,7 +10,7 @@ from utils.base_model import BaseModel
 class Tasks(BaseModel):
     task_time_start = models.TimeField(verbose_name="任务开始时间")
     task_time_end = models.TimeField(verbose_name="任务截止时间")
-    task_title = models.CharField(max_length=100, verbose_name="任务名称")
+    task_title = models.CharField(max_length=200, verbose_name="任务名称")
     task_desc = models.TextField(verbose_name="任务详情")
     task_group = models.ForeignKey(to=TaskGroup, on_delete=models.SET_NULL, null=True,   verbose_name="所属任务组")
     day = models.IntegerField(verbose_name="间隔天数", default=1)
