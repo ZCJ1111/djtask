@@ -62,7 +62,7 @@ def user_login(request: Request):
     password = request.data.get("password")
     u = User.objects.filter(name=username, password=password).first()
     if not u:
-        return Response({"code": 0, "message": "账号密码错误"})
+        return Response({"code": 0, "message": "incorrect username or password"})
     token = uuid.uuid4()
     u.token = token
     u.save()
@@ -175,7 +175,7 @@ def save_user(request: Request):
         return Response({"code": 0, "message": ser.errors})
     ser.save()
 
-    return Response({"code": 20000, "message": "保存成功"})
+    return Response({"code": 20000, "message": "successfully saved"})
 
 
 @api_view(["POST"])
@@ -192,9 +192,9 @@ def admin_save_user(request: Request):
     try:
         ser.save()
     except IntegrityError as e:
-        return Response({"code": 0, "message": "用户名已存在"})
+        return Response({"code": 0, "message": "username already exists"})
 
-    return Response({"code": 20000, "message": "保存成功"})
+    return Response({"code": 20000, "message": "successfully saved"})
 
 
 @api_view(["POST"])
@@ -209,7 +209,7 @@ def admin_del_user(request: Request):
     except ProtectedError as e:
         return Response({"code": 0, "message": "用户以关联数据不能删除"})
 
-    return Response({"code": 20000, "message": "删除成功"})
+    return Response({"code": 20000, "message": "successfully deleted"})
 
 
 @api_view(["POST"])
@@ -290,7 +290,7 @@ def admin_add_group(request: Request):
     if not ser.is_valid():
         return Response({"code": 0, "message": ser.errors})
     ser.save()
-    return Response({"code": 20000, "message": "保存成功"})
+    return Response({"code": 20000, "message": "successfully saved"})
 
 
 @api_view(["POST"])
@@ -302,7 +302,7 @@ def admin_del_group(request: Request):
     pk = request.data.get("id")
     group = TaskGroup.objects.filter(pk=pk).first()
     group.delete()
-    return Response({"code": 20000, "message": "删除成功"})
+    return Response({"code": 20000, "message": "successfully deleted"})
 
 
 
@@ -346,7 +346,7 @@ def admin_add_role(request: Request):
     if not ser.is_valid():
         return Response({"code": 0, "message": ser.errors})
     ser.save()
-    return Response({"code": 20000, "message": "保存成功"})
+    return Response({"code": 20000, "message": "successfully saved"})
 
 
 @api_view(["POST"])
@@ -358,5 +358,5 @@ def admin_del_cole(request: Request):
     pk = request.data.get("id")
     group = Role.objects.filter(pk=pk).first()
     group.delete()
-    return Response({"code": 20000, "message": "删除成功"})
+    return Response({"code": 20000, "message": "successfully deleted"})
 
