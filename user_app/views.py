@@ -93,7 +93,7 @@ def get_user_info(request: Request):
         for i in Resource.objects.all():
             resource[i.action] = True
 
-    image = "/static/image/user.png"
+    image = "\static\image\BOC.png"
     return Response({"code": 20000, "data": {"roles": roles, "introduction": power,
                                              "avatar": 'http://127.0.0.1:8000' + image,
                                              "name": u.name,
